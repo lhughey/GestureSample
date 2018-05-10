@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:gestures="clr-namespace:MR.Gestures;assembly=MR.Gestures"
+             x:Class="GestureSample.Views.NestedControlsTapped">
+    <ContentPage.Content>
+        <StackLayout>
+			<StackLayout x:Name="StackFirst" BackgroundColor="DarkSeaGreen">
+				<Button Text="Add New Elements" Clicked="Button_OnClicked"></Button>
+			</StackLayout>
+			<!-- Actions -->
+			<StackLayout BackgroundColor="Azure">
+				<StackLayout Orientation="Horizontal">
+					<StackLayout.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding ActionAccordionNode.ExpandContractAccordion}"/>
+					</StackLayout.GestureRecognizers>
+					<Label  Text="Actions section " Style="{DynamicResource TitleStyle}" VerticalTextAlignment="Center"/>
+					<Label TextColor="{Binding ActionAccordionNode.HeaderTextColor}"  HorizontalOptions="EndAndExpand" Text="{Binding ActionAccordionNode.IconText}" VerticalTextAlignment="Center"/>
+				</StackLayout>
+			</StackLayout>
+
+			<StackLayout x:Name="stack" BackgroundColor="WhiteSmoke" IsVisible="{Binding ActionAccordionNode.IsExpanded}" Padding="0,0,0,6">
+				<BoxView HeightRequest="100" BackgroundColor="Transparent"></BoxView>
+
+
+				<!--<Label Text="Space that confuses coordinates" HeightRequest="100" BackgroundColor="LightGray"></Label>-->
+
+				<gestures:Button Text="Show coordinates of Deep Nested Popup with coordinate change" 
+							   x:Name="MrButton"
+							   Style="{DynamicResource RoundedButtonStyle}"
+					           LongPressingCommand="{Binding LongPressingCommand}"
+					           LongPressedCommand="{Binding LongPressedCommand}"/>
+			</StackLayout>
+
+
+			<gestures:Button Text="Show coordinates" 
+			           x:Name="MrButton2"
+			           Style="{DynamicResource RoundedButtonStyle}"
+			           LongPressingCommand="{Binding LongPressingCommand}"
+			           LongPressedCommand="{Binding LongPressedCommand}"/>
+
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

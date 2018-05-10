@@ -91,6 +91,7 @@ namespace GestureSample.Views
 						"TableView",
 						"TimePicker",
 						"WebView",
+						"NestedControlsTapped"
 					};
 					var viewsPage = new MainPage { Title = item, BindingContext = viewsVM };
 					await App.MainNavigation.PushAsync(viewsPage);
@@ -166,6 +167,10 @@ namespace GestureSample.Views
 
 				case "WebView":
 					await App.MainNavigation.PushAsync(new WebViewXaml { BindingContext = new ViewModels.CustomEventArgsViewModel() });
+					break;
+
+				case "NestedControlsTapped":
+					await App.MainNavigation.PushAsync(new NestedControlsTapped { BindingContext = new ViewModels.CustomEventArgsViewModel() });
 					break;
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
+using EssetteCM.CustomControls;
 using MR.Gestures;
+using Plugin.Vibrate;
 using Xamarin.Forms;
 
 namespace GestureSample.ViewModels
 {
 	public class CustomEventArgsViewModel : TextOnlyViewModel
 	{
+		public AccordionNodeViewModel ActionAccordionNode { get; private set; }
 		public CustomEventArgsViewModel()
 		{
 			DownCommand = new Command<DownUpEventArgs>(OnDown);
@@ -18,7 +23,7 @@ namespace GestureSample.ViewModels
 			TappedCommand = new Command<TapEventArgs>(OnTapped);
 			DoubleTappedCommand = new Command<TapEventArgs>(OnDoubleTapped);
 			LongPressingCommand = new Command<LongPressEventArgs>(OnLongPressing);
-			LongPressedCommand = new Command<LongPressEventArgs>(OnLongPressed);
+			LongPressedCommand = new Command<LongPressEventArgs>(e => OnLongPressed(e));
 			PinchingCommand = new Command<PinchEventArgs>(OnPinching);
 			PinchedCommand = new Command<PinchEventArgs>(OnPinched);
 			PanningCommand = new Command<PanEventArgs>(OnPanning);
@@ -26,6 +31,8 @@ namespace GestureSample.ViewModels
 			SwipedCommand = new Command<SwipeEventArgs>(OnSwiped);
 			RotatingCommand = new Command<RotateEventArgs>(OnRotating);
 			RotatedCommand = new Command<RotateEventArgs>(OnRotated);
+
+			ActionAccordionNode = new AccordionNodeViewModel("OverwrittenInView", 200, Color.Black, Color.Accent, Color.Black, "+", "-");
 		}
 
 		protected virtual void OnDown(DownUpEventArgs e)
@@ -56,11 +63,27 @@ namespace GestureSample.ViewModels
 		protected virtual void OnLongPressing(LongPressEventArgs e)
 		{
 			AddText(LongPressInfo("Pressing", e));
+
+			AddText("********** Long pressing *******");
+			//var v = CrossVibrate.Current;
+			//v.Vibration(TimeSpan.FromMilliseconds(100)); // 1 second vibration
+
 		}
 
-		protected virtual void OnLongPressed(LongPressEventArgs e)
+		protected virtual async Task OnLongPressed(LongPressEventArgs e)
 		{
 			AddText(LongPressInfo("Pressed", e));
+			StringBuilder sb = new StringBuilder();
+			sb.Append($" ViewPosition: {e.ViewPosition.X:F}/{e.ViewPosition.Y:F}/{e.ViewPosition.Width:F}/{e.ViewPosition.Height:F}");
+
+			await UserDialogs.Instance.AlertAsync(sb.ToString());
+
+			if (e.Duration > 1000)
+			{
+				AddText("********** Letup after long touch*******");
+				//var v = CrossVibrate.Current;
+				//v.Vibration(TimeSpan.FromMilliseconds(250)); // 1 second vibration
+			}
 		}
 
 		protected virtual void OnPinching(PinchEventArgs e)
@@ -114,6 +137,8 @@ namespace GestureSample.ViewModels
 			StringBuilder sb = new StringBuilder(eventName);
 
 			sb.Append($" {GetElementName(e)} for {e.Duration}ms with {e.NumberOfTouches} fingers");
+			sb.Append($" ViewPosition: {e.ViewPosition.X:F}/{e.ViewPosition.Y:F}/{e.ViewPosition.Width:F}/{e.ViewPosition.Height:F}");
+
 			AddTouches(sb, e);
 
 			return sb.ToString();
